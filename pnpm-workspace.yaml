@@ -1,0 +1,17 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+
+# pnpm 11 起构建脚本白名单写在 pnpm-workspace.yaml（package.json 的 pnpm 字段已不再读取）。
+# 这些依赖必须执行安装脚本才能正常工作：
+#   @prisma/client / prisma / @prisma/engines → 生成 Prisma Client 与查询引擎
+#   @nestjs/core                              → 安装期依赖自检
+#   esbuild / @swc/core                       → 原生二进制，Vitest / Nest 构建依赖
+allowBuilds:
+  '@nestjs/core': true
+  '@prisma/client': true
+  '@prisma/engines': true
+  '@scarf/scarf': true
+  '@swc/core': true
+  esbuild: true
+  prisma: true

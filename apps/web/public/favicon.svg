@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="篮迹计分">
+  <rect width="64" height="64" rx="14" fill="#0B1220"/>
+  <circle cx="32" cy="32" r="17" fill="none" stroke="#22D3EE" stroke-width="3"/>
+  <path d="M15 32h34M32 15v34" stroke="#22D3EE" stroke-width="2.5" opacity="0.75"/>
+  <path d="M20 20c8 8 16 16 24 24" stroke="#E4572E" stroke-width="2.5" opacity="0.85"/>
+  <path d="M44 20c-8 8-16 16-24 24" stroke="#2563EB" stroke-width="2.5" opacity="0.85"/>
+</svg>

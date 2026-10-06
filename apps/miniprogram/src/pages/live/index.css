@@ -1,0 +1,227 @@
+.live {
+  height: 100vh;
+  background-color: #0f172a;
+}
+
+.status {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.status--ok {
+  background-color: rgba(22, 163, 74, 0.18);
+}
+
+.status--warn {
+  background-color: rgba(245, 158, 11, 0.18);
+}
+
+.status--bad {
+  background-color: rgba(220, 38, 38, 0.18);
+}
+
+.status__text {
+  font-size: 24px;
+  color: #e2e8f0;
+}
+
+.status__retry {
+  font-size: 24px;
+  color: #38bdf8;
+  padding: 4px 16px;
+}
+
+.live__error {
+  display: block;
+  margin-bottom: 16px;
+  font-size: 24px;
+}
+
+.scoreboard__meta {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.scoreboard__row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.scoreboard__team {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.scoreboard__team--right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.scoreboard__name {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.scoreboard__fouls {
+  font-size: 20px;
+  margin-top: 8px;
+}
+
+.scoreboard__digits {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  padding: 0 16px;
+}
+
+.scoreboard__score {
+  font-size: 76px;
+  font-weight: 800;
+  color: #fbbf24;
+  line-height: 1;
+}
+
+.scoreboard__colon {
+  font-size: 48px;
+  color: #64748b;
+  padding: 0 12px;
+}
+
+.scoreboard__clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.scoreboard__clock-value {
+  font-size: 56px;
+  font-weight: 700;
+  color: #f8fafc;
+  font-variant-numeric: tabular-nums;
+}
+
+.scoreboard__blowout {
+  display: block;
+  margin-top: 12px;
+  font-size: 22px;
+  color: #fbbf24;
+  text-align: center;
+}
+
+.scoreboard__actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.scoreboard__updated {
+  font-size: 22px;
+}
+
+.scoreboard__link {
+  font-size: 26px;
+  color: #38bdf8;
+}
+
+.highlight {
+  display: block;
+  font-size: 26px;
+  padding: 10px 0;
+  color: #fde68a;
+}
+
+.highlight--home {
+  color: #93c5fd;
+}
+
+.highlight--away {
+  color: #fca5a5;
+}
+
+.feed__item {
+  padding: 18px 0;
+  border-bottom: 1px solid #334155;
+}
+
+.feed__item:last-child {
+  border-bottom: none;
+}
+
+.feed__time {
+  display: block;
+  font-size: 22px;
+  color: #94a3b8;
+}
+
+.feed__text {
+  display: block;
+  font-size: 30px;
+  color: #f1f5f9;
+  margin: 6px 0;
+}
+
+.feed__item--home .feed__text {
+  color: #bfdbfe;
+}
+
+.feed__item--away .feed__text {
+  color: #fecaca;
+}
+
+.feed__score {
+  display: block;
+  font-size: 22px;
+  color: #fbbf24;
+}
+
+.player {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #334155;
+}
+
+.player:last-child {
+  border-bottom: none;
+}
+
+.player__jersey {
+  width: 90px;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.player__name {
+  flex: 1;
+  font-size: 28px;
+  color: #e2e8f0;
+}
+
+.player__points {
+  font-size: 30px;
+  font-weight: 700;
+  color: #fbbf24;
+  padding-right: 16px;
+}
+
+.player__extra {
+  font-size: 20px;
+}
+
+.btn {
+  margin-top: 24px;
+}

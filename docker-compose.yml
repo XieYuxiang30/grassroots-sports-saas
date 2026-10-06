@@ -1,0 +1,77 @@
+# ============================================================================
+# 本地一键起服务
+# ============================================================================
+# 两种用法：
+#
+#   1) 只想跑起来看看（零基础设施，用文件存储）
+#        docker compose up -d api
+#      → http://localhost:3000 直接就是完整站点（前端静态产物由 API 托管）
+#
+#   2) 完整链路（PostgreSQL + Prisma，生产推荐）
+#        docker compose up -d
+#      → 先拉起 postgres，再自动执行迁移并启动 api
+#
+# 说明：这里刻意把 postgres 设为 profile，让「只想看看」的人不必先装数据库。
+#   docker compose --profile full up -d
+# ============================================================================
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: hoop-postgres
+    profiles: ['full']
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hoop
+      POSTGRES_PASSWORD: hoop_dev_pw
+      POSTGRES_DB: openhoopscore
+      # 中文环境下排序与大小写折叠更符合直觉
+      POSTGRES_INITDB_ARGS: '--encoding=UTF8 --locale=C'
+      TZ: Asia/Shanghai
+    ports:
+      # 只绑定本机，避免把数据库暴露到公网
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - hoop-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U hoop -d openhoopscore']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hoop-api
+    restart: unless-stopped
+    # 默认（不带 profile）用文件存储：不依赖 postgres 也能起来
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOST: 0.0.0.0
+      # 想切到 PostgreSQL：把 STORAGE_DRIVER 改成 prisma，并对齐 DATABASE_URL
+      STORAGE_DRIVER: ${STORAGE_DRIVER:-json}
+      DATA_DIR: /app/data
+      DATABASE_URL: ${DATABASE_URL:-postgresql://hoop:hoop_dev_pw@postgres:5432/openhoopscore?schema=public}
+      # 生产务必修改！留默认口令时 /api/config/public 会明确提示
+      SCORER_PASSCODE: ${SCORER_PASSCODE:-hoop2024}
+      # 同源部署时不需要放开额外跨域；分离部署（Vercel）时填前端域名
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      SERVE_WEB_ASSETS: 'true'
+      TZ: Asia/Shanghai
+    ports:
+      - '3000:3000'
+    volumes:
+      # 文件存储模式下数据落在这里，升级镜像不丢数据
+      - hoop-data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+        # 不带 full profile 时 postgres 不启动，这里标记为非必需
+        required: false
+
+volumes:
+  hoop-pgdata:
+  hoop-data:

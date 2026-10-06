@@ -1,0 +1,21 @@
+# 构建产物与本地数据不进镜像：它们要么在构建阶段生成，要么属于运行时状态
+node_modules
+**/node_modules
+dist
+**/dist
+data
+.env
+.env.local
+*.log
+.git
+.gitignore
+.vscode
+.idea
+
+# 小程序端产物与本地缓存
+apps/miniprogram/.temp
+apps/miniprogram/.cache
+apps/web/node_modules/.cache
+
+# 权限诊断脚本留下的恢复点
+_acl_recovery

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "buildCommand": "pnpm --filter @openhoopscore/contracts build && pnpm --filter @openhoopscore/web build",
+  "outputDirectory": "apps/web/dist",
+  "installCommand": "pnpm install --ignore-scripts",
+  "rewrites": [
+    {
+      "comment": "单页应用：/m/ABC123 这类分享链接刷新时必须回落到 index.html，否则观众会看到 404",
+      "source": "/((?!api/|socket.io/).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/sw.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache" },
+        { "key": "Service-Worker-Allowed", "value": "/" }
+      ]
+    }
+  ]
+}

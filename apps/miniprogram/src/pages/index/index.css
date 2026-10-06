@@ -1,0 +1,156 @@
+.hero {
+  background: linear-gradient(135deg, #1d4ed8, #0f766e);
+}
+
+.hero__title {
+  display: block;
+  font-size: 40px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.hero__sub {
+  display: block;
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 24px;
+}
+
+.hero__input {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  height: 96px;
+  padding: 0 24px;
+  font-size: 40px;
+  letter-spacing: 8px;
+  color: #0f172a;
+  text-align: center;
+}
+
+.hero__placeholder {
+  color: #94a3b8;
+  font-size: 32px;
+  letter-spacing: 4px;
+}
+
+.hero__actions {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.hero__error {
+  display: block;
+  margin-top: 16px;
+  font-size: 24px;
+  color: #fecaca;
+}
+
+.hero__health {
+  display: block;
+  margin-top: 16px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.btn {
+  flex: 1;
+  height: 88px;
+  line-height: 88px;
+  border-radius: 12px;
+  font-size: 30px;
+  margin: 0;
+}
+
+.btn--primary {
+  background-color: #f59e0b;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.btn--ghost {
+  background-color: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+.match {
+  border-bottom: 1px solid #334155;
+  padding: 20px 0;
+}
+
+.match:last-child {
+  border-bottom: none;
+}
+
+.match__head {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.match__title {
+  font-size: 30px;
+  color: #f1f5f9;
+  font-weight: 600;
+}
+
+.match__status {
+  font-size: 22px;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+.match__status--live {
+  background-color: #b91c1c;
+  color: #fee2e2;
+}
+
+.match__status--scheduled {
+  background-color: #334155;
+  color: #cbd5e1;
+}
+
+.match__status--finished,
+.match__status--archived {
+  background-color: #1e293b;
+  color: #94a3b8;
+}
+
+.match__score {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16px 0 8px;
+}
+
+.match__team {
+  flex: 1;
+  font-size: 26px;
+  color: #cbd5e1;
+}
+
+.match__team:last-child {
+  text-align: right;
+}
+
+.match__digits {
+  font-size: 36px;
+  font-weight: 700;
+  color: #fbbf24;
+  padding: 0 16px;
+}
+
+.match__foot {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.match__code {
+  font-size: 22px;
+  color: #38bdf8;
+}

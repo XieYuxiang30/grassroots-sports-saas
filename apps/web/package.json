@@ -1,0 +1,36 @@
+{
+  "name": "@openhoopscore/web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "基层赛事 SaaS 平台前端：计分端 PWA + 观众端 H5 + 赛事管理后台",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/vite-run.mjs dev",
+    "build": "tsc -p tsconfig.json --noEmit && node scripts/vite-run.mjs build",
+    "build:only": "node scripts/vite-run.mjs build",
+    "preview": "node scripts/vite-run.mjs preview",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "verify:offline": "node scripts/verify-offline-engine.mjs",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true});require('fs').rmSync('node_modules/.cache',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@openhoopscore/contracts": "workspace:*",
+    "qrcode": "1.5.4",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "6.30.0",
+    "socket.io-client": "4.8.1",
+    "zustand": "5.0.3"
+  },
+  "devDependencies": {
+    "@types/qrcode": "1.5.5",
+    "@types/react": "18.3.18",
+    "@types/react-dom": "18.3.5",
+    "@vitejs/plugin-react": "4.3.4",
+    "debug": "4.4.3",
+    "rollup": "4.64.0",
+    "typescript": "5.7.3",
+    "vite": "6.2.4",
+    "vite-plugin-pwa": "1.0.0"
+  }
+}

@@ -1,0 +1,91 @@
+.leaderboard {
+  height: 100vh;
+  background-color: #0f172a;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 14px 0;
+  border-radius: 10px;
+  background-color: #334155;
+  color: #cbd5e1;
+  font-size: 26px;
+}
+
+.tab--active {
+  background-color: #f59e0b;
+  color: #1f2937;
+  font-weight: 700;
+}
+
+.leaderboard__error {
+  display: block;
+  margin-top: 12px;
+  font-size: 22px;
+}
+
+.rank {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid #334155;
+}
+
+.rank:last-child {
+  border-bottom: none;
+}
+
+.rank__no {
+  width: 64px;
+  font-size: 34px;
+  font-weight: 800;
+  color: #fbbf24;
+}
+
+.rank__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.rank__name {
+  font-size: 28px;
+  color: #f1f5f9;
+}
+
+.rank__team {
+  font-size: 20px;
+  margin-top: 6px;
+}
+
+.rank__stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.rank__metric {
+  font-size: 34px;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.rank__unit {
+  font-size: 20px;
+  color: #94a3b8;
+  padding-left: 6px;
+}
+
+.rank__sub {
+  font-size: 20px;
+  margin-top: 4px;
+}

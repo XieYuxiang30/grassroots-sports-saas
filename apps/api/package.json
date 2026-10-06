@@ -1,0 +1,50 @@
+{
+  "name": "@openhoopscore/api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "基层赛事 SaaS 平台后端：事件溯源计分 + Socket.IO 实时 + PostgreSQL/Prisma",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "build:with-deps": "pnpm --filter @openhoopscore/contracts build && tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
+    "start": "node dist/src/main.js",
+    "start:prod": "node --env-file-if-exists=../../.env dist/src/main.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "pretest": "npm run build",
+    "test": "node --test --test-isolation=none \"dist/test/unit/**/*.test.js\"",
+    "test:e2e": "node --test --test-isolation=none --test-concurrency=1 \"dist/test/e2e/**/*.test.js\"",
+    "test:all": "node --test --test-isolation=none --test-concurrency=1 \"dist/test/**/*.test.js\"",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:push": "prisma db push",
+    "db:seed": "node prisma/seed.mjs",
+    "db:studio": "prisma studio",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@nestjs/common": "11.0.12",
+    "@nestjs/core": "11.0.12",
+    "@nestjs/platform-express": "11.0.12",
+    "@nestjs/platform-socket.io": "11.0.12",
+    "@nestjs/serve-static": "5.0.3",
+    "@nestjs/swagger": "11.1.0",
+    "@nestjs/websockets": "11.0.12",
+    "@openhoopscore/contracts": "workspace:*",
+    "@prisma/client": "6.5.0",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.14.1",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2",
+    "socket.io": "4.8.1"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.1",
+    "@types/node": "22.13.14",
+    "prisma": "6.5.0",
+    "socket.io-client": "4.8.1",
+    "tslib": "2.8.1",
+    "typescript": "5.7.3"
+  }
+}

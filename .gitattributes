@@ -1,0 +1,44 @@
+# 统一换行符，避免跨平台协作时整个文件被判定为「已修改」。
+#
+# 背景：本仓库在 Windows 上开发，而 git 默认 core.autocrlf=true 会在提交时把
+# 工作区的 LF 转成 CRLF，于是 `git add` 会对每个文本文件刷出
+# "LF will be replaced by CRLF" 警告（几百上千行）。更重要的是，如果协作者在
+# Linux/macOS 上克隆，行尾不一致会让 diff 变得毫无意义。
+#
+# 这里显式声明：仓库内一律存 LF，检出时不转换。Windows 上的现代编辑器
+# （VS Code、JetBrains）都能正确处理 LF。
+* text=auto eol=lf
+
+# Windows 专用脚本保留 CRLF，否则 cmd/PowerShell 的批处理可能出问题
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# 二进制文件：不做任何行尾转换与 diff
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.wasm binary
+*.node binary
+*.zip binary
+*.pdf binary
+
+# 锁文件：体积大、机器生成，折叠在 diff 里不显示内容
+pnpm-lock.yaml -diff linguist-generated
+package-lock.json -diff linguist-generated
+yarn.lock -diff linguist-generated
+
+# 让 GitHub 的语言统计更准确：小程序与前端是 TS/TSX 为主
+*.tsx text
+*.ts text
+*.css text
+*.md text
+*.json text
+*.prisma text

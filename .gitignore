@@ -1,0 +1,50 @@
+node_modules/
+
+# pnpm 的内容寻址存储：本机安装依赖时自动生成，体积可达数百 MB / 数万文件
+# （本机实测 475 MB / 41838 个文件）。它只是本地缓存，任何情况下都不该进仓库。
+.pnpm-store/
+
+# 用 **/ 前缀：git 的 "dist/" 只匹配仓库根目录下的 dist，
+# 而本仓库每个包各自生成 dist（packages/contracts/dist、apps/*/dist）都要忽略。
+**/dist/
+build/
+.turbo/
+*.tsbuildinfo
+
+# tsc 报错时可能把编译产物写进源码目录（曾把 .js 落在 packages/contracts/src 下）
+packages/*/src/**/*.js
+packages/*/src/**/*.d.ts
+packages/*/src/**/*.js.map
+
+# 环境变量（.env.example 会被提交）
+.env
+.env.local
+.env.*.local
+
+# 零依赖开发驱动的本地数据文件
+data/
+*.sqlite
+*.db
+
+# 小程序编译产物
+apps/miniprogram/dist/
+apps/miniprogram/.temp/
+apps/miniprogram/.rn_temp/
+
+# 编辑器 / 系统
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# 离线计分端本地导出
+exports/
+
+# 权限诊断脚本留下的恢复点（一次性工具产物）
+_acl_recovery/

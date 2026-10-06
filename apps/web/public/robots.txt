@@ -1,0 +1,10 @@
+# 比分与直播页允许被搜索引擎索引没有意义，且现场链接往往只在赛事期间有效。
+# 但允许抓取首页，方便主办方把地址发出去时能被正常预览。
+User-agent: *
+Allow: /$
+Disallow: /api/
+Disallow: /admin
+Disallow: /score/
+Disallow: /display/
+
+Sitemap: /sitemap.xml

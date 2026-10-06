@@ -1,0 +1,57 @@
+{
+  "name": "@openhoopscore/miniprogram",
+  "version": "1.0.0",
+  "private": true,
+  "description": "基层赛事 SaaS 平台 — 观众端小程序 / H5（扫一扫看实时比分）",
+  "templateInfo": {
+    "name": "react",
+    "typescript": true,
+    "css": "none"
+  },
+  "browserslist": [
+    "last 3 versions",
+    "Android >= 4.1",
+    "ios >= 8"
+  ],
+  "scripts": {
+    "build:weapp": "taro build --type weapp",
+    "build:h5": "taro build --type h5",
+    "build:alipay": "taro build --type alipay",
+    "dev:weapp": "npm run build:weapp -- --watch",
+    "dev:h5": "npm run build:h5 -- --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck:config": "tsc -p tsconfig.node.json --noEmit",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.24.4",
+    "@openhoopscore/contracts": "workspace:*",
+    "@tarojs/components": "4.2.1",
+    "@tarojs/helper": "4.2.1",
+    "@tarojs/plugin-framework-react": "4.2.1",
+    "@tarojs/plugin-platform-h5": "4.2.1",
+    "@tarojs/plugin-platform-weapp": "4.2.1",
+    "@tarojs/react": "4.2.1",
+    "@tarojs/runtime": "4.2.1",
+    "@tarojs/taro": "4.2.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "socket.io-client": "4.8.1",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.4",
+    "@tarojs/cli": "4.2.1",
+    "@tarojs/taro-loader": "4.2.1",
+    "@tarojs/webpack5-runner": "4.2.1",
+    "@types/node": "^22.13.14",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@types/webpack-env": "^1.18.5",
+    "babel-preset-taro": "4.2.1",
+    "postcss": "^8.4.38",
+    "react-refresh": "^0.14.0",
+    "typescript": "5.7.3",
+    "webpack": "5.91.0"
+  }
+}

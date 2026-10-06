@@ -1,0 +1,32 @@
+{
+  "description": "基层赛事 SaaS 平台 - 观众端小程序（Taro 4 + React + TypeScript）",
+  "projectname": "openhoopscore-miniprogram",
+  "appid": "touristappid",
+  "compileType": "miniprogram",
+  "libVersion": "3.4.0",
+  "miniprogramRoot": "dist/",
+  "srcMiniprogramRoot": "dist/",
+  "setting": {
+    "urlCheck": false,
+    "es6": false,
+    "enhance": false,
+    "postcss": false,
+    "minified": false,
+    "compileHotReLoad": false,
+    "bigPackageSizeSupport": true,
+    "ignoreDevUnusedFiles": false,
+    "ignoreUploadUnusedFiles": false,
+    "packNpmManually": false
+  },
+  "packOptions": {
+    "ignore": [
+      { "type": "folder", "value": "src" },
+      { "type": "folder", "value": "config" },
+      { "type": "folder", "value": "types" },
+      { "type": "folder", "value": "node_modules" },
+      { "type": "folder", "value": ".tmp-verify" }
+    ],
+    "include": []
+  },
+  "condition": {}
+}

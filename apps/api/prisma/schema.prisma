@@ -1,0 +1,188 @@
+// ============================================================================
+// 基层赛事 SaaS 平台 — PostgreSQL 数据模型（Prisma ORM）
+// ============================================================================
+// 核心思想：**事件溯源**。GameEvent 是唯一的事实来源（source of truth），
+// 比分、球员数据、图文直播都是从事件流重放出来的投影。
+// 因此这里**没有** `score` / `home_score` 这类字段 —— 只存事件，不存结果。
+//
+// 历史事件永不物理删除：
+//   - 计分员点错了 → 追加一条 type = 'void' 的事件，指向被作废的事件；
+//   - 比赛结束/归档 → 只改 status，事件流完整保留，随时可回放复盘。
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// 赛季 / 赛事
+// ---------------------------------------------------------------------------
+
+model Season {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @db.VarChar(120)
+  organizer String?  @db.VarChar(120)
+  startDate DateTime? @map("start_date") @db.Date
+  endDate   DateTime? @map("end_date") @db.Date
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  matches Match[]
+
+  @@map("seasons")
+}
+
+// ---------------------------------------------------------------------------
+// 比赛
+// ---------------------------------------------------------------------------
+
+model Match {
+  id            String   @id @default(uuid()) @db.Uuid
+  seasonId      String?  @map("season_id") @db.Uuid
+  competition   String   @db.VarChar(120)
+  title         String   @db.VarChar(160)
+  venue         String?  @db.VarChar(160)
+  scheduledAt   DateTime? @map("scheduled_at") @db.Timestamptz(3)
+
+  /// scheduled | live | finished | archived
+  status        String   @default("scheduled") @db.VarChar(16)
+
+  /// quarters（4 节制）| halves（2 节制）
+  periodFormat  String   @default("quarters") @map("period_format") @db.VarChar(16)
+  periodSeconds Int      @default(600) @map("period_seconds")
+  regulationPeriods Int  @default(4) @map("regulation_periods")
+
+  /// 扫码进房用的短分享码，全局唯一
+  shareCode     String   @unique @map("share_code") @db.VarChar(12)
+
+  homeTeamId    String   @map("home_team_id") @db.Uuid
+  awayTeamId    String   @map("away_team_id") @db.Uuid
+
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  season        Season?  @relation(fields: [seasonId], references: [id], onDelete: SetNull)
+  homeTeam      Team     @relation("HomeTeam", fields: [homeTeamId], references: [id], onDelete: Restrict)
+  awayTeam      Team     @relation("AwayTeam", fields: [awayTeamId], references: [id], onDelete: Restrict)
+  teams         Team[]   @relation("MatchTeams")
+  events        GameEvent[]
+
+  @@index([status, scheduledAt])
+  @@index([seasonId])
+  @@map("matches")
+}
+
+model Team {
+  id        String   @id @default(uuid()) @db.Uuid
+  matchId   String   @map("match_id") @db.Uuid
+  /// home | away
+  side      String   @db.VarChar(8)
+  name      String   @db.VarChar(120)
+  shortName String   @map("short_name") @db.VarChar(40)
+  /// 主题色，形如 #E4572E
+  color     String   @default("#2563EB") @db.VarChar(16)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  match         Match       @relation("MatchTeams", fields: [matchId], references: [id], onDelete: Cascade)
+  homeOfMatches Match[]     @relation("HomeTeam")
+  awayOfMatches Match[]     @relation("AwayTeam")
+  players       Player[]
+
+  @@unique([matchId, side])
+  @@map("teams")
+}
+
+model Player {
+  id           String   @id @default(uuid()) @db.Uuid
+  teamId       String   @map("team_id") @db.Uuid
+  jerseyNumber String   @map("jersey_number") @db.VarChar(8)
+  name         String   @db.VarChar(80)
+  isStarter    Boolean  @default(false) @map("is_starter")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  team   Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  events GameEvent[]
+
+  @@unique([teamId, jerseyNumber])
+  @@map("players")
+}
+
+// ---------------------------------------------------------------------------
+// GameEvents —— 事件溯源核心表
+// ---------------------------------------------------------------------------
+
+model GameEvent {
+  id            String   @id @default(uuid()) @db.Uuid
+  matchId       String   @map("match_id") @db.Uuid
+  /// score | foul | team_foul | timeout | substitution | turnover | steal
+  /// | block | rebound | period_end | game_start | game_end | void
+  eventType     String   @map("event_type") @db.VarChar(24)
+  teamId        String?  @map("team_id") @db.Uuid
+  playerId      String?  @map("player_id") @db.Uuid
+
+  /// 0 | 1 | 2 | 3：该事件的得分增量
+  points        Int      @default(0)
+  /// 第几节（从 1 开始）
+  period        Int      @default(1)
+  /// 事件发生时该节剩余秒数（可空，基层赛事常常没有专职计时员）
+  gameClockSeconds Int?  @map("game_clock_seconds")
+
+  /// 计分设备本地时间：离线多设备合并时的时间线依据
+  clientTimestamp DateTime @map("client_timestamp") @db.Timestamptz(3)
+  /// 计分设备标识
+  clientId        String   @map("client_id") @db.VarChar(64)
+  /// 幂等键：同一场比赛内 (match_id, client_event_id) 唯一，防重复计分
+  clientEventId   String   @map("client_event_id") @db.VarChar(64)
+
+  /// 服务端权威顺序号：增量同步游标 + 断线重放依据
+  seq             Int      @map("seq")
+
+  /// 若该事件已被撤销，指向那条 void 事件
+  voidedByEventId String?  @map("voided_by_event_id") @db.Uuid
+
+  /// 事件结构化数据（score.points / substitution.playerInId / void.targetEventId ...）
+  payload         Json     @default("{}")
+
+  /// 服务端接受时间（审计用，不参与排序）
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  match  Match   @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  player Player? @relation(fields: [playerId], references: [id], onDelete: SetNull)
+
+  /// 幂等保证：重复补传同一条本地事件不会造成重复计分
+  @@unique([matchId, clientEventId], name: "game_events_idempotency")
+  /// 权威顺序与增量游标
+  @@unique([matchId, seq], name: "game_events_match_seq")
+  /// 按时间线回放 / 冲突排查
+  @@index([matchId, clientTimestamp])
+  /// 按球员、按队伍聚合统计
+  @@index([matchId, teamId])
+  @@index([matchId, playerId])
+  @@map("game_events")
+}
+
+// ---------------------------------------------------------------------------
+// 计分端同步审计（可选）：记录每次离线补传的批次，便于现场排查
+// ---------------------------------------------------------------------------
+
+model SyncBatch {
+  id             String   @id @default(uuid()) @db.Uuid
+  matchId        String   @map("match_id") @db.Uuid
+  clientId       String   @map("client_id") @db.VarChar(64)
+  eventCount     Int      @map("event_count")
+  acceptedCount  Int      @map("accepted_count")
+  duplicateCount Int      @map("duplicate_count")
+  rejectedCount  Int      @map("rejected_count")
+  sinceSeq       Int?     @map("since_seq")
+  finalSeq       Int      @map("final_seq")
+  /// 客户端上报的离线时长（秒），用于统计现场网络质量
+  offlineSeconds Int?     @map("offline_seconds")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@index([matchId, createdAt])
+  @@map("sync_batches")
+}
